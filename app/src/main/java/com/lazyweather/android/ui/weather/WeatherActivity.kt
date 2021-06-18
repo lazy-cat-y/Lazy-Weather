@@ -47,8 +47,8 @@ class WeatherActivity : AppCompatActivity() {
          * window.setDecorFitsSystemWindows(false)在真机上崩溃，虚拟机上可以
          *
          */
-        window.setDecorFitsSystemWindows(false)
-//        WindowCompat.setDecorFitsSystemWindows(window, false)
+//        window.setDecorFitsSystemWindows(false)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
 //        window?.run {
 //            WindowCompat.setDecorFitsSystemWindows(this, false)
 //        }

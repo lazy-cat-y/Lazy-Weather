@@ -3,6 +3,7 @@
     package="com.lazyweather.android">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:name=".LazyWeatherApplication"
@@ -12,8 +13,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.LazyWeather">
-        <activity android:name=".ui.weather.WeatherActivity"
-            ></activity>
+        <receiver
+            android:name=".ui.place.SaveSuccess"
+            android:enabled="true"
+            android:exported="true">
+
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+
+        </receiver>
+
+        <activity android:name=".ui.weather.WeatherActivity" />
         <activity
             android:name=".MainActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">

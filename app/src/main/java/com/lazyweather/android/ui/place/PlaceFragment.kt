@@ -13,7 +13,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.lazyweather.android.MainActivity
 import com.lazyweather.android.R
-import com.lazyweather.android.databinding.FragmentPlaceBinding
 import com.lazyweather.android.ui.weather.WeatherActivity
 import kotlinx.android.synthetic.main.fragment_place.*
 
