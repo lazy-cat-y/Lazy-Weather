@@ -1,7 +1,5 @@
 package com.lazyweather.android.logic
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.liveData
 import com.lazyweather.android.logic.dao.PlaceDao
 import com.lazyweather.android.logic.model.Place
@@ -14,36 +12,48 @@ import java.lang.Exception
 import java.lang.RuntimeException
 import kotlin.coroutines.CoroutineContext
 
+
 object Repository {
 
     fun searchPlaces(query: String) = fire(Dispatchers.IO) {
         val placeResponse = LazyWeatherNetwork.searchPlaces(query)
-        if (placeResponse.status == "ok") {
+        if (placeResponse.code == "200") {
             val places = placeResponse.places
             Result.success(places)
         } else {
-            Result.failure(RuntimeException("response status is ${placeResponse.status}"))
+            Result.failure(RuntimeException("response status is ${placeResponse.code}"))
         }
     }
 
     fun refreshWeather(lng: String, lat: String) = fire(Dispatchers.IO) {
         coroutineScope {
+
+            val _where = "$lng,$lat"
+
             val deferredRealtime = async {
-                LazyWeatherNetwork.getRealtimeWeather(lng, lat)
+                LazyWeatherNetwork.getRealtimeWeather(_where)
             }
             val deferredDaily = async {
-                LazyWeatherNetwork.getDailyWeather(lng, lat)
+                LazyWeatherNetwork.getDailyWeather(_where)
+            }
+            val deferredAir = async {
+                LazyWeatherNetwork.getNowAir(_where)
+            }
+            val deferredIndices = async {
+                LazyWeatherNetwork.getIndices(_where)
             }
             val realtimeResponse = deferredRealtime.await()
             val dailyResponse = deferredDaily.await()
-            if (realtimeResponse.status == "ok" && dailyResponse.status == "ok") {
-                val weather = Weather(realtimeResponse.result.realtime, dailyResponse.result.daily)
+            val airResponse = deferredAir.await()
+            val indicesResponse = deferredIndices.await()
+            if (realtimeResponse.code == "200" && dailyResponse.code == "200" && airResponse.code == "200" && indicesResponse.code == "200") {
+                val weather = Weather(realtimeResponse.now, dailyResponse.daily, airResponse.now, indicesResponse.daily)
                 Result.success(weather)
             } else {
                 Result.failure(
                         RuntimeException(
-                                "realtime response status is ${realtimeResponse.status}" +
-                                        "daily response status is ${dailyResponse.status}"
+                                "realtime response status is ${realtimeResponse.code}" +
+                                        "daily response status is ${dailyResponse.code}"
                         )
                 )
             }

@@ -29,14 +29,14 @@ class PlaceAdapter(private val fragment: PlaceFragment, private val placeList: L
             val activity = fragment.activity
             if (activity is WeatherActivity) {
                 activity.drawerLayout.closeDrawers()
-                activity.viewModel.locationLng = place.location.lng
-                activity.viewModel.locationLat = place.location.lat
+                activity.viewModel.locationLng = place.lon
+                activity.viewModel.locationLat = place.lat
                 activity.viewModel.placeName = place.name
                 activity.refreshWeather()
             } else {
                 val intent = Intent(parent.context, WeatherActivity::class.java).apply {
-                    putExtra("location_lng", place.location.lng)
-                    putExtra("location_lat", place.location.lat)
+                    putExtra("location_lng", place.lon)
+                    putExtra("location_lat", place.lat)
                     putExtra("place_name", place.name)
                 }
                 fragment.startActivity(intent)
@@ -50,7 +50,7 @@ class PlaceAdapter(private val fragment: PlaceFragment, private val placeList: L
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val place = placeList[position]
         holder.placeName.text = place.name
-        holder.placeAddress.text = place.address
+        holder.placeAddress.text = place.adm2 + place.adm1 + place.country
     }
 
     override fun getItemCount(): Int = placeList.size

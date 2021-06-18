@@ -10,13 +10,17 @@ import kotlin.coroutines.suspendCoroutine
 
 object LazyWeatherNetwork {
 
-    private val weatherService = ServiceCreator.create(WeatherService::class.java)
+    private val weatherService = ServiceCreatorWeather.create(WeatherService::class.java)
 
-    suspend fun getDailyWeather(lng: String, lat: String) = weatherService.getDailyWeather(lng, lat).await()
+    suspend fun getDailyWeather(_where: String) = weatherService.getDailyWeather(_where).await()
 
-    suspend fun getRealtimeWeather(lng: String, lat: String) = weatherService.getRealtimeWeather(lng, lat).await()
+    suspend fun getRealtimeWeather(_where: String) = weatherService.getRealtimeWeather(_where).await()
 
-    private val placeService = ServiceCreator.create(PlaceService::class.java)
+    suspend fun getNowAir(_where: String) = weatherService.getNowAir(_where).await()
+
+    suspend fun getIndices(_where: String) = weatherService.getIndices(_where).await()
+
+    private val placeService = ServiceCreatorPlace.create(PlaceService::class.java)
 
     suspend fun searchPlaces(query: String) = placeService.searchPlaces(query).await()
 

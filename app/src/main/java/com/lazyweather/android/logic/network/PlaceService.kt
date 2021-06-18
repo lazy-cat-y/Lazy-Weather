@@ -8,7 +8,7 @@ import retrofit2.http.Query
 
 interface PlaceService {
 
-    @GET("v2/place?token=${LazyWeatherApplication.TOKEN}&lang=zh_CN")
-    fun searchPlaces(@Query("query") query: String): Call<PlaceResponse>
+    @GET("v2/city/lookup?key=${LazyWeatherApplication.KEY}")
+    fun searchPlaces(@Query("location") query: String): Call<PlaceResponse>
 
 }
